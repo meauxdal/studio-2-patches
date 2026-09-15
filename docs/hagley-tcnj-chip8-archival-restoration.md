@@ -76,9 +76,24 @@ bytes are not discarded or silently treated as part of that shorter image.
 Likewise, the 512-byte Tic-Tac-Toe capture is preserved even though only its
 first 470 bytes match the manual-sized program used by the patch project.
 
-The extraction log and intermediate payloads are retained under
-`software/chip8-holding/`; the playable extracted results are separately
-labelled in `software/RCA-Studio-II-Fullset/3 CHIP-8/`.
+The extraction log, source images, and byte-preserving payloads should be kept
+together in an accession-oriented preservation tree. Playable extractions must
+remain explicitly labelled as derivatives.
+
+## Additional 512-byte-boundary extractions
+
+Two later-reviewed captures also divide at file offset `$0200`, but their
+resident interpreter regions are variants rather than byte-identical copies of
+the standard interpreter above. Their payload boundary is independently
+supported by the program comparisons.
+
+| Accession | Source layout | Result |
+| --- | --- | --- |
+| `AUD_2464_09_B41_ID20_01` — VIP Pinball | 1792-byte capture; first 512 bytes are a CHIP-8 interpreter variant differing at three offsets from the common image; payload begins at `$0200` | retain all 1280 post-interpreter bytes as `VIP Pinball (Andrew Modla, Hagley Capture)`; the program body agrees with the established Andrew Modla image while Hagley's captured tail is deliberately retained |
+| `AUD_2464_09_B41_ID32_01_2` — Snoopy COSMAC picture | 2048-byte capture; first 512 bytes are the resident interpreter region | the 1536 bytes at file `$0200-$07FF` exactly match the established `Snoopy COSMAC Picture` hybrid |
+
+These are page-aligned extractions, not claims that every byte before `$0200`
+matches one canonical interpreter revision.
 
 ## Portable restoration ledger
 

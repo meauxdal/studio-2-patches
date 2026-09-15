@@ -9,7 +9,7 @@ No RTL change is justified by the evidence collected so far.
 
 ## Exact input
 
-`software/RCA-Studio-II-Fullset/2 Prototypes and Betas/Colors Stars and Trek [AUD_2464_09_B41_ID09_02].bin`
+`derived/AUD_2464_09_B41_ID09_02/Colors Stars and Trek.bin`
 
 - Length: 1,024 bytes.
 - SHA-256: `ca6e04260fdf71a30096b492944f637c1738628e3e340b8616c54cdc4aaafdba`.
@@ -146,7 +146,7 @@ all perceived glitches or establish that real hardware behaves identically.
 
 ## Studio II alternate comparison
 
-The user observed similar bottom lines with both Fullset alternate BIOSes.
+The user observed similar bottom lines with both alternate BIOS images.
 Byte comparison of the Studio II standard and alternate files found exactly
 one difference: `003E` is `34` (B1) in standard and `38` (SKP/NBR) in the
 alternate. The following operand is `3C`. This disables the conditional
