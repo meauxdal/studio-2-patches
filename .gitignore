@@ -1,5 +1,4 @@
 refs/
-derived/
+derived*/
 __pycache__/
-hagley/*/
-/hagley
+hagley/
