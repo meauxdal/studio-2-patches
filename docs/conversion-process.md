@@ -89,6 +89,28 @@ These transformations were established from 256-byte page structure, with
 | `ID27_01_2` | complete byte-for-byte match to the established FEL-1 example | `FEL-1 Example` |
 | `ID32_01_2` | after the 512-byte interpreter region, the remaining 1536 bytes exactly match Snoopy COSMAC Picture | `Snoopy COSMAC Picture` |
 
+### Reviewed page-structure findings not yet emitted by `build.py`
+
+The following archival objects have now been analyzed on the same byte- and
+page-structure grounds. They remain preserved as canonical sources, but no new
+build recipe is implied merely by documenting a supported internal boundary.
+
+| Accession | Canonical source SHA-256 | Structural finding | Current treatment |
+| --- | --- | --- | --- |
+| `ID03_02` | `84557d922ba84df950f2ec8b36fedb1ab00bd4930027d071f81e88a11800d452` | one 256-byte COSMAC ELF image; native code occupies file `$0000-$003F`, followed by display data at `$0040-$00FF` including the visible `COSMAC` raster | retain the complete page; code and display data form one program image |
+| `ID04_01` | `735674bf9323a1672f63d62d60ae54e8734d222fb4cc31de4ccee792bb8c348f` | complete 2048-byte Bowling image; all eight 256-byte pages are distinct and each contains 242-256 nonzero bytes, with no supported internal split | retain the complete 2 KiB image |
+| `ID12_02` | `77d1eac8931609006e6233fc632550aa88020b92f00871c36e88c41477e73bbe` | 256-byte 1K memory-test image; execution deliberately enters the `$0080` region, so the upper half is not generic page padding | retain the complete page |
+| `ID15_02` | `5d4a08d65a9854cd1056c9f9539b589c4b15bf6a2242107e1b6f1eec25d4323e` | five-page Subject Color image; the driver selects display pages `$0100`, `$0200`, `$0300`, and `$0400`; the all-zero `$0100` page is therefore intentional | retain all 1280 bytes as one memory image |
+| `ID31_02` | `9af19f67d50c301e3448a8fdd14bbfc47b57f1681e5293da63c3717b724943b7` | `$0000-$01FF` is the STK-1 language/core and `$0200-$02FF` is its example program/data | document the `$0200` boundary; keep the archival composite intact |
+| `ID31_01` | `cadcfd9e01ea5798aa8332ecab2c2f557e2eb5e8d429987040ca1fe04341b8c4` | `$0000-$01FF` is the closely related STK-2 language/core and `$0200-$04FF` is the A/B/C/D example program; the STK-1 and STK-2 cores differ at only 14 bytes | document the `$0200` boundary; keep the archival composite intact |
+| `ID32_01_1` | `74e372e858019aa3d8ffe50d49c99aa16f81922b10ec71a5f55dd651485c0434` | the two terminal loops end with branch operands at file `$006E`; `$006F-$00FF` is 145 zero bytes, giving a well-supported 111-byte program extent inside the 256-byte archival page | retain the canonical page; a future program-only derivative may use `$0000-$006E` if added as a guarded recipe |
+
+Emma 02 carries byte-identical copies of `ID12_02`, both STK objects, and the
+VIP 1K Memory Test. Its copy of the latter is labelled
+`AUD_2464_09_B41_ID32_02_1`, while the Hagley file reviewed here is
+`AUD_2464_09_B41_ID32_01_1`. The bytes establish identity; the accession suffix
+disagreement is retained as provenance metadata rather than silently normalized.
+
 `ID14_02` and `ID26_02` are still reported as unmapped. `ID14_02` contains one
 page of native code labelled “180-List Utility,” but its execution mapping and
 independent identity remain unresolved. `ID26_02` contains C80-LANG/PRINT
@@ -96,9 +118,11 @@ material, but its precise execution role and useful standalone form likewise
 have not been established well enough to emit a finalized derivative.
 
 Any canonical file without a supported recipe is reported as unmapped.
-Reporting is not rejection: it marks the boundary between a preserved source
-and a transformation whose address or execution model has been sufficiently
-understood.
+A documented internal boundary is not, by itself, a build recipe: the source
+remains unmapped until an output identity and guarded transformation are both
+established. Reporting is not rejection; it marks the boundary between a
+preserved source and a transformation whose address or execution model has
+been sufficiently understood.
 
 ## Direct and newly corrected source mappings
 

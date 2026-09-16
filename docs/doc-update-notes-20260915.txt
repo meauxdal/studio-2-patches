@@ -1,0 +1,20 @@
+Updated documentation for the September 15 Hagley binary review.
+
+Central documentation:
+- conversion-process.md: added seven reviewed page-structure findings without
+  implying build.py recipes; documented the Emma 02 ID32 accession mismatch.
+- hagley-studio-ii-iii-binary-provenance.md: added a detailed adjacent-Hagley
+  analysis section and condensed handoff entries.
+- hagley-tcnj-chip8-archival-restoration.md: separated archival capture extent
+  from supported program extent for Videodraw, Kaleidoscope, Tick-Tack-Toe,
+  and Private Eye Target Practice; corrected the stale Bingo output SHA-256 after checking the current patch repository.
+
+Patch notes / sidecars:
+- videodraw.md: documented the independently preserved 80-byte program extent.
+- tick-tack-toe.md: documented the 42-byte Hagley capture tail and board RAM.
+- Private Eye Target Practice sidecar: documented the probable 294-byte static
+  program extent while retaining the complete 512-byte extraction.
+- Videodraw sidecar: added patch description and controls.
+- Tick-Tack-Toe sidecar: added source/capture and patch description.
+- bingo.md, pinball.md, wipe-off.md, and the Wipe Off sidecar were reviewed and
+  copied unchanged.

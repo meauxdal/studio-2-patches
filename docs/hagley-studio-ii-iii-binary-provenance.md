@@ -24,8 +24,11 @@ current BIN / ST2 file, or a clearly labelled non-standalone fragment
 The scope of this particular map covers archival material associated with the
 Studio II and Studio III family. TCNJ/Sarnoff and Emma 02 copies are included
 when they are a source or when their bytes corroborate an identity or split.
-Other accessions remain preserved even when they are outside this map. CHIP-8
-extraction and restoration are covered by the companion
+Other accessions remain preserved even when they are outside this map. A later
+section records several adjacent COSMAC ELF/VIP Hagley objects whose page
+structure materially informs the same split-and-retain policy; those entries
+are analytical findings, not current `build.py` outputs. CHIP-8 extraction and
+restoration are covered by the companion
 [CHIP-8 archival restoration map](hagley-tcnj-chip8-archival-restoration.md).
 The item
 catalogued as Studio II-TV Tennis Side 02 is retained only to show why binary
@@ -818,6 +821,112 @@ RTL cannot run the full high-page test.
 
 ---
 
+
+## Adjacent Hagley page-structure findings
+
+These seven objects are not added to the Studio II/III derivative set merely
+because an internal boundary can be described. They are recorded here because
+they clarify when a 256- or 512-byte boundary represents a real software
+boundary and when it is only part of a complete machine image.
+
+### `AUD_2464_09_B41_ID03_02` — COSMAC Elf Display
+
+- Download size: `$0100` / 256 bytes
+- SHA-256: `84557d922ba84df950f2ec8b36fedb1ab00bd4930027d071f81e88a11800d452`
+- File `$0000-$003F`: native CDP1802 display/control code
+- File `$0040-$00FF`: associated bitmap/display data
+
+The display data includes a five-row `COSMAC` raster at `$0050-$0077` and a
+larger 64-pixel-wide graphic beginning at `$0080`. This is a semantic
+code/data boundary inside one program, not evidence for two independent
+binaries. The complete 256-byte page should remain together.
+
+### `AUD_2464_09_B41_ID04_01` — Bowling (B2-B8) COSMAC 180
+
+- Download size: `$0800` / 2048 bytes
+- SHA-256: `735674bf9323a1672f63d62d60ae54e8734d222fb4cc31de4ccee792bb8c348f`
+
+All eight 256-byte pages are distinct and densely populated. No blank page,
+repeated half, or page-aligned discontinuity supports an internal split. The
+image is also byte-distinct from the 2048-byte Coin Bowling and Tag-Bowling
+images carried by Emma 02. The Hagley object should therefore remain a
+complete, distinct 2 KiB Bowling image rather than being collapsed into either
+later-known file.
+
+### `AUD_2464_09_B41_ID12_02` and `ID32_01_1` — two 1K memory tests
+
+The two 256-byte objects are related by purpose but are different programs.
+
+| Accession | SHA-256 | Byte-structure finding |
+| --- | --- | --- |
+| `ID12_02` | `77d1eac8931609006e6233fc632550aa88020b92f00871c36e88c41477e73bbe` | startup deliberately sets the execution register to `$0080`; the `$0080` region contains an active setup stub, so the upper half of the page cannot be discarded as padding |
+| `ID32_01_1` | `74e372e858019aa3d8ffe50d49c99aa16f81922b10ec71a5f55dd651485c0434` | the final nonzero byte is file `$006E`; `$006F-$00FF` is exactly 145 zero bytes, giving a supported 111-byte program extent |
+
+`ID12_02` works from the high end of its tested 1 KiB region, while the VIP
+test initializes its tested range from `$0400`. Emma 02 carries exact copies of
+both binaries. Its VIP copy is named
+`AUD_2464_09_B41_ID32_02_1`, whereas the Hagley filename reviewed here is
+`AUD_2464_09_B41_ID32_01_1`; the accession suffix discrepancy is retained as
+metadata because the bytes themselves are identical.
+
+For preservation, both complete 256-byte Hagley objects remain canonical. The
+111-byte extent in `ID32_01_1` is strong enough to support a future
+program-only derivative, but documenting that extent does not itself require
+one.
+
+### `AUD_2464_09_B41_ID15_02` — Subject Color 5P
+
+- Download size: `$0500` / 1280 bytes
+- SHA-256: `5d4a08d65a9854cd1056c9f9539b589c4b15bf6a2242107e1b6f1eec25d4323e`
+
+The five pages are functionally related rather than an executable followed by
+an overdump. The first page contains the native driver. Its code selects high
+display-address bytes `$01`, `$02`, `$03`, and `$04`, corresponding to the four
+following pages. File page `$0100-$01FF` is entirely zero, while pages
+`$0200-$04FF` contain regular geometric bitmap patterns. The blank page is
+therefore an intentional display page, not removable padding.
+
+The complete five-page memory image should be retained intact.
+
+### `AUD_2464_09_B41_ID31_02` and `ID31_01` — STK-1 / STK-2
+
+Both STK captures establish a strong boundary at file/memory `$0200`:
+
+```text
+ID31_02
+$0000-$01FF  STK-1 language/core             512 bytes
+$0200-$02FF  accompanying example program     256 bytes
+
+ID31_01
+$0000-$01FF  STK-2 language/core             512 bytes
+$0200-$04FF  A/B/C/D example program          768 bytes
+```
+
+The startup code initializes R5 to `$0200`, independently supporting that
+division. The two 512-byte language/core regions share their complete first
+256-byte page and differ at only 14 offsets in the second page: `$0105` and
+`$0173-$017F`. Their SHA-256 values are:
+
+| Region | SHA-256 |
+| --- | --- |
+| STK-1 core, `ID31_02` `$0000-$01FF` | `e4d0c7e2790240b3d9ac276a7223cddeb9028ffdb9c47042001e5748586276bc` |
+| STK-2 core, `ID31_01` `$0000-$01FF` | `d773a709ca170b98a1eda147d0e4b13de953300db3d4281cb78cf6b56d9fb784` |
+| STK-1 example, `ID31_02` `$0200-$02FF` | `0249f4d191d2165a552da6112e2e218bebd02dc81785f329d3a12d7f447d3418` |
+| STK-2 example, `ID31_01` `$0200-$04FF` | `4651e2cf34d0a0f105d0c350a7851c8b54da43e164ee26ff113bc84c1e4de98f` |
+
+Emma 02 independently describes the first object as STK-1 language with an
+example program and the second as STK-2 with an A/B/C/D example. Its notes also
+identify the expected printer interface as output 3 for the latch, Q for
+strobe, and EF3 for busy. The STK-2 note says option A operates on values
+beginning at `$0500`, immediately above its captured `$0000-$04FF` image.
+
+The `$0200` split is therefore well supported analytically, but the examples
+remain programs for their corresponding STK environments. The canonical
+composites should remain intact unless a future guarded recipe deliberately
+emits the components.
+
+---
+
 ## Prototype and beta output hygiene sweep
 
 The final sweep applies these rules to every binary object under
@@ -914,6 +1023,15 @@ Hagley / TCNJ audio tape
   |     Extracted Binary: 251-byte fragment
   |     $0100 FRED 1.5 tape save/load fragment -------> clearly named BIN + ST2
   |                                                     explicitly non-standalone
+  |
+  +-- Adjacent Hagley page-structure findings
+  |     ID03_02 COSMAC Elf Display: one-page code + display-data image
+  |     ID04_01 Bowling: complete distinct 2 KiB image; no supported split
+  |     ID12_02 1K MTest: complete page; active code reaches $0080
+  |     ID15_02 Subject Color: five intentional pages, including blank display page
+  |     ID31_02 / ID31_01 STK: 512-byte core + program at $0200
+  |     ID32_01_1 VIP 1K M TEST: 111 meaningful bytes + zero page padding
+  |     (documented structure only; no current build recipe)
   |
   +-- TCNJ S.572.11B “ST3CTA Tester 3”
         Extracted Binary: sparse twelve-page ST2

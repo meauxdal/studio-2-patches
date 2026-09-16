@@ -69,12 +69,34 @@ byte-for-byte with the common interpreter before the split.
 | `AUD_2464_09_B41_ID23_01` — Tic-Tac-Toe (CHIP 8) 4 Pages @0000 | 1024 bytes; SHA-256 `642210831052150fed87c30538811cc84b55f1e4350bb62bd89fcb977d265186` | 512 bytes; SHA-256 `22d6c108415ff9ed86c7c7fcdcf29563e923f954e06ac938a171d593964072d6` | preserved capture; its first 470 bytes match the manual-sized Tick-Tack-Toe source used for the portable fix |
 | `AUD_2464_09_B41_ID23_02` — Private Eye Target Practice (CHIP 8) 4 Pages | 1024 bytes; SHA-256 `c9cb2a320f511da6cbd808645cf7ca428c26ef1eb74b2d31d66c0d8d3aae1a7e` | 512 bytes; SHA-256 `7961dd3164f74368e6ec8bcf8862ac383ca303eacb4172d2b90fe9917e03bb96` | exact match for the existing Private Eye Target Practice payload; labelled extraction also retained |
 
+### Program extents inside the preserved captures
+
+The page-sized extracted payload is the archival unit; it is not automatically
+the program length. Static analysis and independent copies establish several
+shorter program extents inside these captures:
+
+| Capture | Supported program extent | Tail finding |
+| --- | --- | --- |
+| Videodraw | first 80 bytes, `$0200-$024F`; SHA-1 `12fccf60004f685c112fe3db3d3bcfba104cbcb1` | no evidence supports a second program in the remaining 176 bytes; the portable fix deliberately reuses ten unreachable bytes at `$0250-$0259` |
+| Kaleidoscope | first 122 bytes, `$0200-$0279`; SHA-1 `fc724ae0125f5f1ac94a79fe3afc6318b1f57556` | the program stores key-derived values back into the same memory page beginning around `$0280`; the retained tail is therefore consistent with captured runtime state rather than another concatenated program |
+| Tick-Tack-Toe | first 470 bytes, `$0200-$03D5`; SHA-1 `8c404dc15f854456cafe9b22fcdbaf16830ffde5` | the 42-byte tail is outside the manual-sized program; `$03F0-$03FF` is mutable board/work state cleared by the program's native startup service |
+| Private Eye Target Practice | static control flow supports a probable 294-byte extent, `$0200-$0325`; SHA-1 `0368b88f78007cb062bcb62a72794551cf03267a` | no supported transfer enters `$0326+`, and `$03F8-$03FA` is used as mutable BCD workspace; no independent 294-byte witness has been found, so the 512-byte extraction is not truncated |
+
 The full 256-byte Kaleidoscope payload is retained because that is what the
 tape derivative preserves. Its first 122 bytes exactly match the shorter
-Joseph Weisbecker Kaleidoscope image in the collection; the remaining captured
-bytes are not discarded or silently treated as part of that shorter image.
-Likewise, the 512-byte Tic-Tac-Toe capture is preserved even though only its
-first 470 bytes match the manual-sized program used by the patch project.
+Joseph Weisbecker Kaleidoscope image in the collection, while the later bytes
+show evidence consistent with a live memory capture. Likewise, the 512-byte
+Tic-Tac-Toe capture is preserved even though only its first 470 bytes belong to
+the manual-sized program. Private Eye Target Practice remains a full 512-byte
+archival extraction because its shorter static extent is not independently
+corroborated. It should also remain distinct from the separately catalogued
+`Private Eye [TCNJ S.572.37]`: that program's established SHA-1
+`3a840c33442ad9e912df1fa2aa61833bf571af34` does not match this 512-byte
+payload or any prefix of it.
+
+These findings reject a simple “trim to the nearest 256-byte boundary” rule:
+the outer page size describes the capture, while code flow and independent
+witnesses establish program extent.
 
 The extraction log, source images, and byte-preserving payloads should be kept
 together in an accession-oriented preservation tree. Playable extractions must
@@ -107,7 +129,7 @@ The hashes below identify the canonical outputs of those guarded builders.
 
 | Title | Source and restoration class | Result |
 | --- | --- | --- |
-| Bingo | TCNJ `S.572.2, 3`; replaces six classes of native VIP service while retaining game state and display behavior in CHIP-8 code | 1536-byte portable fix; SHA-256 `d261441ae0e9241cf43cf33f6947e55ec7e9c9c038eb46ebff0668aa0433f5fb` |
+| Bingo | TCNJ `S.572.2, 3`; replaces six classes of native VIP service while retaining game state and display behavior in CHIP-8 code | 1536-byte portable fix; SHA-256 `d7e5cd2d5c070eb4d8476bd5a0e6fa3f255d84944fb39db461998bb1d7ab69d9` |
 | Clock Program | common 280-byte image; replaces a native timing loop with a 60-tick CHIP-8 delay-timer interval | 280-byte portable fix; SHA-256 `bf2d6d3bdcaefa4997ac81d40790adccb58be5c264b917b8f6a3c355123d98a7` |
 | Craps | common 192-byte image; reconstructs a missing seven-byte frame sprite whose address and geometry are fixed by the program | 247-byte reconstruction; SHA-256 `2dee82081ef51e77187ff83d931288f2ec3c732b382f7c43ed068b4809ae735a` |
 | Keypad Test | common 114-byte image; makes four shifts explicit so VIP and modern shift conventions agree | 114-byte portable fix; SHA-256 `4132032f1d3874c8b6ad7728b1e402ba1b6330db1f775a5e858ae3f9599a6a23` |
@@ -133,7 +155,8 @@ The detailed evidence is maintained with the builders:
 - The four Hagley composite splits remove exactly the verified interpreter
   prefix; the interpreter-only `ID21_01` object produces no payload.
 - Extracted payloads retain their complete post-`$01FF` byte range, including
-  capture tails whose purpose is not established.
+  capture tails even when a shorter program extent is established. Program
+  extent and archival capture extent are documented separately.
 - Hashes identify exact files. A title or visual resemblance is not used as a
   substitute for byte equality.
 - Portable fixes are derived files. Builders guard the accepted source hash
