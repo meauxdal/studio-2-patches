@@ -241,6 +241,7 @@ OUTPUT_HASHES: dict[str, str] = {
     "Numbers.st2": "dfaa54602e15fbecdd5bc9d49ce3faad5123b6caa5e2c8de738e3211f52b91b1",
     "Paul's Printer.rom": "47d62cfaa6b0c31d485ef543976a2f732c64c8a95367c1d971a50f0f94371323",
     "Paul's resident.rom": "9b9dd1528ba59f0ea0ef7e487cc8bd92488641f7d9d47dfef85f2a6905558a9c",
+    "Paul's resident.st2": "d12f6148b946a746ec92b9c6981746eae3537b79b6b0164f09e36025dfdead75",
     "Print Snoopy.bin": "f103f5a39b1ed7fe53f6317ce901b09dba97730c4bad92c8c1b78fab524c4c75",
     "Print Snoopy.st2": "dc5ecd2ae0059952bc8cb5b8842233755c3d61ad9012e8e833db29006cff0baa",
     "Color Runs.rom": "50e4abe8b4449d2f284a15b732509ce7856ea537bd4817dd58ddbd6460a91e15",
@@ -259,6 +260,7 @@ OUTPUT_HASHES: dict[str, str] = {
     "TV Tennis.st2": "b08b8256b310197bd65ec3c13e7f50753ef1ce3bfe10f7bba2cc52b5726ea35f",
     "Color Etch.rom": "2bba48ca1e49cd48112a4240ad5c5ccce7e12e8d55b09169b591cb0f59099a47",
     "180 XL-1.rom": "55484365a66c56327622b66ed77a31bfde7336f3b2a0b53c6f0ba8226f68e1d0",
+    "180 XL-1.st2": "026d135a2fff4e8c2987e693f8f9979d8ad9b7853984cf20e6a162eadbca9969",
     "Snoopy Snipe Shoot.rom": "712c36ff83a23df3c742b9e6d3aa0480bb52b050fe6d52605f5ecf133c59c9db",
     "FRED 1.5 fragment.bin": "38fbfa3bb6abf2776eefd55941a702d858e74d32cc5fd5b79c1f3140f825abca",
     "FRED 1.5 fragment.st2": "ad9423d4a34ed51ff72a0bbbf1f402fa31d8f8011830fe2b047d0f303ab5c3e3",
@@ -456,6 +458,18 @@ def build(sources: dict[str, bytes]) -> dict[Path, bytes]:
             / "180 XL-1 Resident Interpreter (Paul's Printer extraction) "
             "[AUD_2464_09_B41_ID13_01].rom"
         ] = checked("Paul's resident.rom", resident)
+        outputs[
+            accession_dir("ID13_01")
+            / "180 XL-1 Resident Interpreter (Paul's Printer extraction) "
+            "[AUD_2464_09_B41_ID13_01].st2"
+        ] = checked(
+            "Paul's resident.st2",
+            make_st2(
+                resident,
+                (0, 1, 2, 3),
+                b"180 XL1 Res.\0" + b"2464_09_B41_ID13_01",
+            ),
+        )
 
     if "ID14_01" in sources:
         raw = payload(sources["ID14_01"], (4, 5))
@@ -622,10 +636,21 @@ def build(sources: dict[str, bytes]) -> dict[Path, bytes]:
         )
 
     if "ID13_02" in sources:
+        raw = sources["ID13_02"]
         outputs[
             accession_dir("ID13_02") / "180 XL-1 [AUD_2464_09_B41_ID13_02].rom"
         ] = checked(
-            "180 XL-1.rom", sources["ID13_02"]
+            "180 XL-1.rom", raw
+        )
+        outputs[
+            accession_dir("ID13_02") / "180 XL-1 [AUD_2464_09_B41_ID13_02].st2"
+        ] = checked(
+            "180 XL-1.st2",
+            make_st2(
+                raw,
+                tuple(range(8)),
+                b"180 XL-1\0\0\0\0\0" + b"2464_09_B41_ID13_02",
+            ),
         )
 
     if "ID16_01" in sources:

@@ -521,9 +521,11 @@ the two distinct 1024-byte `$0000-$03FF` resident images:
 | 180 XL-1 Resident Interpreter (Color Runs extraction) | ID16_02 bytes `$0000-$03FF` | `6765e9ed45f6375b6d1fac21f44653e4bf3d826b81020a64ec21e23e4574d5a6` |
 | 180 XL-1 Resident Interpreter (Paul's Printer extraction) | ID13_01 payload bytes `$0000-$03FF` | `9b9dd1528ba59f0ea0ef7e487cc8bd92488641f7d9d47dfef85f2a6905558a9c` |
 
-The Paul's Printer copy is written beneath its accession as a raw ROM. It
-differs from the Color Runs copy only at `$0178` and `$0183`, as described
-above.
+The Paul's Printer copy is written beneath its accession as a raw ROM and a
+four-page ST2 mapped at `$0000-$03FF`. It differs from the Color Runs copy only
+at `$0178` and `$0183`, as described above. The complete `ID13_02` image is
+likewise emitted as its preserved 2 KiB ROM and an eight-page ST2 mapped at
+`$0000-$07FF`.
 
 ### Individually mapped components
 

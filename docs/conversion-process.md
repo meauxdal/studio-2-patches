@@ -58,7 +58,7 @@ required to be contiguous from address zero, and decoded to absolute ROM bytes.
   RCA2/ST2 structure from the bytes, then extract the mapped four-page payload
   while preserving the canonical source unchanged.
 - `ID13_01` and `ID16_02`: extract absolute 2 KiB images and their resident
-  `$0000-$03FF` regions.
+  `$0000-$03FF` regions; wrap the new `ID13_01` resident extraction as ST2.
 - `ID14_01`: retain the two-page payload and construct the corrected two-page
   ST2 container.
 - `ID33_01`: correct the ST2 block count and extract its complete four-page
@@ -66,8 +66,10 @@ required to be contiguous from address zero, and decoded to absolute ROM bytes.
 - `ID33_02`: restore the five trailing zero bytes established by independently
   preserved tape-block data, yielding the identified FRED 1.5 tape save/load
   fragment as one complete page mapped at `$0100`.
-- `ID10` and `ID13_02`: retain the established address-zero images with an
-  extension that describes how they are loaded.
+- `ID10`: retain the established address-zero image with an extension that
+  describes how it is loaded.
+- `ID13_02`: retain the established address-zero ROM and wrap the same bytes
+  in an eight-page ST2 mapped at `$0000-$07FF`.
 - `ID16_01`: decode and checksum-check the Intel HEX text into a contiguous
   2 KiB absolute ROM; the result exactly matches the established Snoopy Snipe
   Shoot binary.
@@ -131,7 +133,7 @@ been sufficiently understood.
 | `ID03_01` | `60240a06b9baf54257b61ebd97e40ef74b8a295bbc31311cb188cc3e2a712889` | split the raw 2 KiB image at file `$0400` | 1 KiB New Studio 2-5 Game Set BIN/ST2; resident half remains preserved in the source |
 | `ID08_01` | `7c134efa56f2cde8c238e83dc3e50efecc91a8c32f44f9ba3fb18d097291568b` | split the raw 2 KiB image at file `$0400` | 1 KiB Biorhythm BIN/ST2; resident half remains preserved in the source |
 | `ID10` | `2bba48ca1e49cd48112a4240ad5c5ccce7e12e8d55b09169b591cb0f59099a47` | retain the raw absolute image; its first 512 bytes match the `ID13_02` environment | 2 KiB ROM |
-| `ID13_02` | `55484365a66c56327622b66ed77a31bfde7336f3b2a0b53c6f0ba8226f68e1d0` | retain the raw absolute image; its first 1 KiB matches the resident region extracted from `ID13_01` | 2 KiB ROM |
+| `ID13_02` | `55484365a66c56327622b66ed77a31bfde7336f3b2a0b53c6f0ba8226f68e1d0` | retain the raw absolute image; its first 1 KiB matches the resident region extracted from `ID13_01` | 2 KiB ROM and eight-page ST2 mapped at `$0000-$07FF` |
 | `ID16_01` | `44db71ad57ba04c5fcdad739c815c28ab0e50c46b3697c1768ef026ab6a41a2e` | validate all Intel HEX record checksums and decode addresses `$0000-$07FF` | 2 KiB ROM with SHA-256 `712c36ff83a23df3c742b9e6d3aa0480bb52b050fe6d52605f5ecf133c59c9db` |
 
 The shared `ID03_01`/`ID08_01` resident region has SHA-256
